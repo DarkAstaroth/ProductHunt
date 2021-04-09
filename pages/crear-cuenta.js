@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import Layout from '../components/layout/Layout';
 
-export default function Nosotros() {
+export default function CrearCuenta() {
   return (
     <div>
       <Layout>
-        <h1>Nosotros</h1>
+        <h1>Crear Cuenta</h1>
       </Layout>
 
     </div>

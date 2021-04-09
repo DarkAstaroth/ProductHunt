@@ -22,6 +22,10 @@ const Logo = styled.p`
     line-height:0;
     font-family:'Ubuntu',serif;
     margin-right: 3rem;
+    
+    &:hover{
+        cursor:pointer;
+    }
 `;
 
 const Header = () => {
@@ -73,12 +77,12 @@ const Header = () => {
                             </Fragment>
                         ) : (
                             <Fragment>
-                                <Link href="/">
+                                <Link href="/login">
                                     <Boton
                                         bgColor="true"
                                     >Login</Boton>
                                 </Link>
-                                <Link href="/">
+                                <Link href="/crear-cuenta">
                                     <Boton>Crear cuenta</Boton>
                                 </Link>
                             </Fragment>
