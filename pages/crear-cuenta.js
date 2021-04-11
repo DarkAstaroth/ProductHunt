@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { css } from '@emotion/react';
+import Router from 'next/router';
 import styled from '@emotion/styled';
 import Layout from '../components/layout/Layout';
 import { Formulario, Campo, InputSubmit,Error } from '../components/ui/Formulario';
@@ -15,8 +16,13 @@ const STATE_INICIAL = {
   email: '',
   password:''
 }
+const firebaseErrors = {
+  'auth/email-already-in-use': 'La dirección de correo electrónico ya está siendo utilizada por otra cuenta.'
+}
 
 export default function CrearCuenta() {
+
+  const [error, setError] = useState(false);
 
   const {
         valores,
@@ -31,9 +37,14 @@ export default function CrearCuenta() {
   
   async function crearCuenta() {
     try {
+
       await firebase.registrar(nombre, email, password);
+      Router.push('/');
+
     } catch (error) {
-      console.error('hubo un error al crear el usuario',error.message)
+      //console.error('Hubo un error al crear el usuario', error.code);
+      throw firebaseErrors[error.code] || error.message,
+      setError(firebaseErrors[error.code]);
     }
   }
 
@@ -93,7 +104,7 @@ export default function CrearCuenta() {
               />
             </Campo>
             {errores.password && <Error>{errores.password}</Error>}
-
+            {error ? <Error>{error}</Error>:null}
             <Campo>
               <InputSubmit
                 type="submit"
