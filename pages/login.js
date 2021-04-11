@@ -16,7 +16,9 @@ const STATE_INICIAL = {
   password: ''
 }
 const firebaseErrors = {
-  'auth/email-already-in-use': 'La dirección de correo electrónico ya está siendo utilizada por otra cuenta.'
+  'auth/user-not-found': 'No hay ningún registro de usuario que corresponda a este email',
+  'auth/wrong-password': 'La contraseña no es válida o el usuario no tiene contraseña.',
+  'auth/too-many-requests':'El acceso a esta cuenta se ha desactivado temporalmente debido a muchos intentos fallidos de inicio de sesión'
 }
 
 export default function Login() {
@@ -35,8 +37,18 @@ export default function Login() {
 
   const { email, password } = valores;
 
-  function iniciarSesion() {
-    console.log('iniciando sesion');
+  async function iniciarSesion() {
+    try {
+
+      await firebase.login(email, password);
+      Router.push('/');
+
+    } catch (error) {
+      console.log(error.message);
+      console.log(error.code);
+      throw firebaseErrors[error.code] || error.message,
+      setError(firebaseErrors[error.code]);
+    }
   }
 
   return (
