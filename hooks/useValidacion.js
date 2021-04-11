@@ -32,12 +32,20 @@ const useValidacion = (stateInicial, validar,fn) => {
         setSubmitFrom(true);
     }
 
+    // cuando se realiza el evento de blur
+
+    const handleBlur = e => {
+        const erroresValidacion = validar(valores);
+        setErrores(erroresValidacion);
+    }
+
     return {
         valores,
         errores,
         submitFrom,
         handleChange,
-        handleSubmit
+        handleSubmit,
+        handleBlur
     }
 }
  
