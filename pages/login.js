@@ -44,10 +44,10 @@ export default function Login() {
       Router.push('/');
 
     } catch (error) {
-      console.log(error.message);
-      console.log(error.code);
+
       throw firebaseErrors[error.code] || error.message,
       setError(firebaseErrors[error.code]);
+      
     }
   }
 
