@@ -22,7 +22,9 @@ export default function CrearCuenta() {
         submitFrom,
         handleChange,
         handleSubmit
-  } = useValidacion(STATE_INICIAL, validarCrearCuenta, crearCuenta);
+  } = useValidacion(STATE_INICIAL, validarCrearCuenta, CrearCuenta);
+
+  const { nombre, email, password } = valores;
   
   function CrearCuenta() {
     console.log("Creando cuenta...")
@@ -38,7 +40,10 @@ export default function CrearCuenta() {
               margin-top:5rem;
             `}
           >Crear Cuenta</h1>
-          <Formulario>
+          <Formulario
+            onSubmit={handleSubmit}
+            noValidate
+          >
             <Campo>
               <label htmlFor="nombre">Nombre:</label>
               <input
@@ -46,6 +51,8 @@ export default function CrearCuenta() {
                 name="nombre"
                 id="nombre"
                 placeholder="Tu Nombre"
+                value={nombre}
+                onChange={handleChange}
               />
             </Campo>
 
@@ -56,6 +63,8 @@ export default function CrearCuenta() {
                 name="email"
                 id="email"
                 placeholder="Tu Email"
+                value={email}
+                onChange={handleChange}
               />
             </Campo>
 
@@ -66,6 +75,8 @@ export default function CrearCuenta() {
                 name="password"
                 id="password"
                 placeholder="Tu Password"
+                value={password}
+                onChange={handleChange}
               />
             </Campo>
 
