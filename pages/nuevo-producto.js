@@ -1,6 +1,7 @@
-import React, { Fragment, useState, useContext} from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import { css } from '@emotion/react';
 import Router, { useRouter } from 'next/router';
+import FileUploader from 'react-firebase-file-uploader';
 import styled from '@emotion/styled';
 import Layout from '../components/layout/Layout';
 import { Formulario, Campo, InputSubmit, Error } from '../components/ui/Formulario';
@@ -14,8 +15,8 @@ import validarCrearProducto from '../validacion/validarCrearProducto';
 const STATE_INICIAL = {
   nombre: '',
   empresa: '',
-  // imagen: '',
   url: '',
+  urlImagen:'',
   descripcion: ''
 }
 const firebaseErrors = {
@@ -23,6 +24,13 @@ const firebaseErrors = {
 }
 
 export default function NuevoProducto() {
+
+  // state de las imagene
+
+  const [nombreImagen, setNombreImagen] = useState('');
+  const [subiendo, setSubiendo] = useState(false);
+  const [progreso, setProgreso] = useState(0);
+  const [urlImagen, setUrlImagen] = useState('');
 
   const [error, setError] = useState(false);
 
@@ -38,21 +46,22 @@ export default function NuevoProducto() {
   const { nombre, empresa, imagen, url, descripcion } = valores;
 
   const { usuario, firebase } = useContext(FirebaseContext);
-  
+
   const router = useRouter();
 
   async function crearProducto() {
     try {
 
       if (!usuario) {
-        router.push('/');
+        return router.push('/');
       }
       const producto = {
-        nombre, empresa, url, descripcion, votos: 0, comentarios: [], creado: Date.now()
+        nombre, empresa, url, urlImagen, descripcion, votos: 0, comentarios: [], creado: Date.now()
       }
 
       await firebase.db.collection('productos').add(producto);
       console.log("Exitoso!!")
+      return router.push('/');
 
     } catch (error) {
       console.error('Hubo un error al crear el producto', error.code);
@@ -60,6 +69,35 @@ export default function NuevoProducto() {
       console.log(error);
     }
   }
+
+  const handleUploadStart = () => {
+    setProgreso(0);
+    setSubiendo(true);
+  }
+
+  const handleProgress = progreso => {
+    setProgreso({ progreso })
+  }
+
+  const handleUploadError = error => {
+    setSubiendo(error);
+    console.error(error);
+  };
+
+  const handleUploadSuccess = async nombre => {
+    setProgreso(100);
+    setSubiendo(false);
+    setNombreImagen(nombre);
+    firebase
+      .storage
+      .ref("productos")
+      .child(nombre)
+      .getDownloadURL()
+      .then(url => {
+        console.log(url);
+        setUrlImagen(url);
+      });
+  };
 
   return (
     <div>
@@ -106,18 +144,20 @@ export default function NuevoProducto() {
               </Campo>
               {errores.empresa && <Error>{errores.empresa}</Error>}
 
-              {/* <Campo>
+              <Campo>
                 <label htmlFor="imagen">Imagen:</label>
-                <input
-                  type="file"
+                <FileUploader
+                  accept="image/*"
                   name="imagen"
                   id="imagen"
-                  value={imagen}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  randomizeFilename
+                  storageRef={firebase.storage.ref("productos")}
+                  onUploadStart={handleUploadStart}
+                  onUploadError={handleUploadError}
+                  onUploadSuccess={handleUploadSuccess}
+                  onProgress={handleProgress}
                 />
               </Campo>
-              {errores.imagen && <Error>{errores.imagen}</Error>} */}
 
               <Campo>
                 <label htmlFor="url">Url:</label>
