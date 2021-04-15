@@ -5,6 +5,8 @@ import FileUploader from 'react-firebase-file-uploader';
 import styled from '@emotion/styled';
 import Layout from '../components/layout/Layout';
 import { Formulario, Campo, InputSubmit, Error } from '../components/ui/Formulario';
+import Swal from 'sweetalert2'
+
 
 import { FirebaseContext } from '../firebase';
 
@@ -60,7 +62,13 @@ export default function NuevoProducto() {
       }
 
       await firebase.db.collection('productos').add(producto);
-      console.log("Exitoso!!")
+      
+      Swal.fire(
+        'Buen trabajo!',
+        'Producto registrado con exito!',
+        'success'
+      );
+
       return router.push('/');
 
     } catch (error) {
