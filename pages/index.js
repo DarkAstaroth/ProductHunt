@@ -1,7 +1,8 @@
-import React,{ useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Layout from '../components/layout/Layout';
 import { FirebaseContext } from '../firebase';
+import DetallesProducto from '../components/layout/DetallesProducto';
 
 export default function Home() {
 
@@ -16,13 +17,13 @@ export default function Home() {
         firebase.db.collection('productos').orderBy('creado', 'desc').onSnapshot(manejarSnapchot);
 
       } catch (error) {
-        
+
       }
     }
     obtenerProductos();
   }, []);
 
-  function manejarSnapchot (snapshot) {
+  function manejarSnapchot(snapshot) {
     const productos = snapshot.docs.map(doc => {
       return {
         id: doc.id,
@@ -31,12 +32,26 @@ export default function Home() {
     });
 
     setProductos(productos);
+    console.log(productos)
   }
 
   return (
     <div>
       <Layout>
-        <h1>Inicio</h1>
+        <div className="listado-productos">
+          <div className="contenedor">
+            <div className="bg-white">
+              {
+                productos.map(producto => (
+                  <DetallesProducto
+                    key={producto.id}
+                    producto={producto}
+                  />
+                ))
+              }
+            </div>
+          </div>
+        </div>
       </Layout>
 
     </div>
