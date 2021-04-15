@@ -23,13 +23,6 @@ export default function validarCrearProducto(valores) {
         errores.descripcion = "Agrega una descripcion de tu producto";
     }
     
-    // validar el password
-    if (!valores.password) {
-        errores.password = "El Password es Obligatorio";
-    } else if (valores.password.length<6) {
-        errores.password = "El password debe ser de al menos 6 caracteres";
-    }
-
     return errores;
 }
 

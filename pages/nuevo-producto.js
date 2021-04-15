@@ -1,11 +1,11 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext} from 'react';
 import { css } from '@emotion/react';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import styled from '@emotion/styled';
 import Layout from '../components/layout/Layout';
 import { Formulario, Campo, InputSubmit, Error } from '../components/ui/Formulario';
 
-import firebase from '../firebase';
+import { FirebaseContext } from '../firebase';
 
 // Validaciones
 import useValidacion from '../hooks/useValidacion';
@@ -16,12 +16,11 @@ const STATE_INICIAL = {
   empresa: '',
   // imagen: '',
   url: '',
-  descripcion:''  
+  descripcion: ''
 }
 const firebaseErrors = {
   'auth/email-already-in-use': 'La dirección de correo electrónico ya está siendo utilizada por otra cuenta.'
 }
-
 
 export default function NuevoProducto() {
 
@@ -34,12 +33,32 @@ export default function NuevoProducto() {
     handleChange,
     handleSubmit,
     handleBlur
-  } = useValidacion(STATE_INICIAL, validarCrearProducto, crearCuenta);
+  } = useValidacion(STATE_INICIAL, validarCrearProducto, crearProducto);
 
   const { nombre, empresa, imagen, url, descripcion } = valores;
 
-  async function crearCuenta() {
+  const { usuario, firebase } = useContext(FirebaseContext);
+  
+  const router = useRouter();
 
+  async function crearProducto() {
+    try {
+
+      if (!usuario) {
+        router.push('/');
+      }
+      const producto = {
+        nombre, empresa, url, descripcion, votos: 0, comentarios: [], creado: Date.now()
+      }
+
+      await firebase.db.collection('productos').add(producto);
+      console.log("Exitoso!!")
+
+    } catch (error) {
+      console.error('Hubo un error al crear el producto', error.code);
+      throw firebaseErrors[error.code] || error.message,
+      console.log(error);
+    }
   }
 
   return (
