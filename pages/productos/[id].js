@@ -1,10 +1,13 @@
 import React, { useEffect, useContext, useState, Fragment } from 'react';
 import { useRouter } from 'next/router';
 import { FirebaseContext } from '../../firebase';
+import formarDistanceToNow from 'date-fns/formatDistanceToNow';
+import { es } from 'date-fns/locale';
 import Error404 from '../../components/layout/404';
 import Layout from '../../components/layout/Layout';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { Campo, InputSubmit } from '../../components/ui/Formulario';
 
 const ContenedorProducto = styled.div`
     @media (min-width:768px){
@@ -60,8 +63,37 @@ const Producto = () => {
                         `}>{nombre}</h1>
                     <ContenedorProducto>
                         <div>
-                            1
+                            <p>Publicado hace : {formarDistanceToNow(new Date(creado), { locale: es })}</p>
+                            <img src={urlImagen} alt="" />
+                            <p>{descripcion}</p>
+
+                            <h2>Agrega tu comentario</h2>
+                            <form>
+                                <Campo>
+                                    <input
+                                        type="text"
+                                        name="mensaje"
+                                    />
+                                </Campo>
+                                <InputSubmit
+                                    type="submit"
+                                    value="Agregar Comentario"
+                                />
+                            </form>
+
+                            <h2
+                                css={css`
+                                    margin:2rem 0;
+                                `}
+                            >Comentarios</h2>
+                            {comentarios.map(comentario => (
+                                <li>
+                                    <p>{comentario.nombre}</p>
+                                    <p>Escrito por: { comentario.usuarioNombre }</p>
+                                </li>
+                            ))}
                         </div>
+
                         <aside>
                             2
                         </aside>
