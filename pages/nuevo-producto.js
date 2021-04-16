@@ -70,7 +70,8 @@ export default function NuevoProducto() {
         creador: {
           id: usuario.uid,
           nombre: usuario.displayName
-        }
+        },
+        haVotado:[]
       }
 
       await firebase.db.collection('productos').add(producto);
