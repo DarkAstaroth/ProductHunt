@@ -9,6 +9,7 @@ import Swal from 'sweetalert2'
 
 
 import { FirebaseContext } from '../firebase';
+import Error404 from '../components/layout/404';
 
 // Validaciones
 import useValidacion from '../hooks/useValidacion';
@@ -18,7 +19,7 @@ const STATE_INICIAL = {
   nombre: '',
   empresa: '',
   url: '',
-  urlImagen:'',
+  urlImagen: '',
   descripcion: ''
 }
 const firebaseErrors = {
@@ -73,7 +74,7 @@ export default function NuevoProducto() {
       }
 
       await firebase.db.collection('productos').add(producto);
-      
+
       Swal.fire(
         'Buen trabajo!',
         'Producto registrado con exito!',
@@ -118,110 +119,117 @@ export default function NuevoProducto() {
       });
   };
 
+
+
   return (
     <div>
       <Layout>
-        <Fragment>
-          <h1
-            css={css`
+
+        {!usuario
+          ? <Error404 />
+          : <Fragment>
+            <h1
+              css={css`
               text-align:center;
               margin-top:5rem;
             `}
-          >Nuevo Producto</h1>
-          <Formulario
-            onSubmit={handleSubmit}
-            noValidate
-          >
+            >Nuevo Producto</h1>
+            <Formulario
+              onSubmit={handleSubmit}
+              noValidate
+            >
 
-            <fieldset>
-              <legend>Informacion General</legend>
+              <fieldset>
+                <legend>Informacion General</legend>
+                <Campo>
+                  <label htmlFor="nombre">Nombre:</label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    id="nombre"
+                    placeholder="Tu Nombre"
+                    value={nombre}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Campo>
+                {errores.nombre && <Error>{errores.nombre}</Error>}
+
+                <Campo>
+                  <label htmlFor="empresa">Empresa:</label>
+                  <input
+                    type="text"
+                    name="empresa"
+                    id="empresa"
+                    placeholder="Nombre de Empresa o Compañia"
+                    value={empresa}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Campo>
+                {errores.empresa && <Error>{errores.empresa}</Error>}
+
+                <Campo>
+                  <label htmlFor="imagen">Imagen:</label>
+                  <FileUploader
+                    accept="image/*"
+                    name="imagen"
+                    id="imagen"
+                    randomizeFilename
+                    storageRef={firebase.storage.ref("productos")}
+                    onUploadStart={handleUploadStart}
+                    onUploadError={handleUploadError}
+                    onUploadSuccess={handleUploadSuccess}
+                    onProgress={handleProgress}
+                  />
+                </Campo>
+
+                <Campo>
+                  <label htmlFor="url">Url:</label>
+                  <input
+                    type="text"
+                    name="url"
+                    id="url"
+                    placeholder="URL de tu producto"
+                    value={url}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Campo>
+                {errores.url && <Error>{errores.url}</Error>}
+              </fieldset>
+
+              <fieldset>
+                <legend>Sobre tu producto</legend>
+                <Campo>
+                  <label htmlFor="descripcion">Descripcion:</label>
+                  <textarea
+                    name="descripcion"
+                    id="descripcion"
+                    value={descripcion}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Campo>
+                {errores.descripcion && <Error>{errores.descripcion}</Error>}
+              </fieldset>
+
+
+
+
+              {error ? <Error>{error}</Error> : null}
               <Campo>
-                <label htmlFor="nombre">Nombre:</label>
-                <input
-                  type="text"
-                  name="nombre"
-                  id="nombre"
-                  placeholder="Tu Nombre"
-                  value={nombre}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                <InputSubmit
+                  type="submit"
+                  value="Crear Producto"
                 />
               </Campo>
-              {errores.nombre && <Error>{errores.nombre}</Error>}
-
-              <Campo>
-                <label htmlFor="empresa">Empresa:</label>
-                <input
-                  type="text"
-                  name="empresa"
-                  id="empresa"
-                  placeholder="Nombre de Empresa o Compañia"
-                  value={empresa}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </Campo>
-              {errores.empresa && <Error>{errores.empresa}</Error>}
-
-              <Campo>
-                <label htmlFor="imagen">Imagen:</label>
-                <FileUploader
-                  accept="image/*"
-                  name="imagen"
-                  id="imagen"
-                  randomizeFilename
-                  storageRef={firebase.storage.ref("productos")}
-                  onUploadStart={handleUploadStart}
-                  onUploadError={handleUploadError}
-                  onUploadSuccess={handleUploadSuccess}
-                  onProgress={handleProgress}
-                />
-              </Campo>
-
-              <Campo>
-                <label htmlFor="url">Url:</label>
-                <input
-                  type="text"
-                  name="url"
-                  id="url"
-                  placeholder="URL de tu producto"
-                  value={url}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </Campo>
-              {errores.url && <Error>{errores.url}</Error>}
-            </fieldset>
-
-            <fieldset>
-              <legend>Sobre tu producto</legend>
-              <Campo>
-                <label htmlFor="descripcion">Descripcion:</label>
-                <textarea
-                  name="descripcion"
-                  id="descripcion"
-                  value={descripcion}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </Campo>
-              {errores.descripcion && <Error>{errores.descripcion}</Error>}
-            </fieldset>
 
 
+            </Formulario>
+          </Fragment>
+        }
 
-
-            {error ? <Error>{error}</Error> : null}
-            <Campo>
-              <InputSubmit
-                type="submit"
-                value="Crear Producto"
-              />
-            </Campo>
-
-
-          </Formulario>
-        </Fragment>
       </Layout>
 
     </div>

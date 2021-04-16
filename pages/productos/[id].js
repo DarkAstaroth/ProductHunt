@@ -30,7 +30,7 @@ const Producto = () => {
     const { query: { id } } = router;
 
     // context de firebase
-    const { firebase } = useContext(FirebaseContext);
+    const { firebase, usuario } = useContext(FirebaseContext);
 
     useEffect(() => {
         if (id) {
@@ -65,23 +65,27 @@ const Producto = () => {
                     <ContenedorProducto>
                         <div>
                             <p>Publicado hace : {formarDistanceToNow(new Date(creado), { locale: es })}</p>
-                            <p>Por: {creador.nombre} de { empresa }</p>
+                            <p>Por: {creador.nombre} de {empresa}</p>
                             <img src={urlImagen} alt="" />
                             <p>{descripcion}</p>
 
-                            <h2>Agrega tu comentario</h2>
-                            <form>
-                                <Campo>
-                                    <input
-                                        type="text"
-                                        name="mensaje"
-                                    />
-                                </Campo>
-                                <InputSubmit
-                                    type="submit"
-                                    value="Agregar Comentario"
-                                />
-                            </form>
+                            {usuario && (
+                                <Fragment>
+                                    <h2>Agrega tu comentario</h2>
+                                    <form>
+                                        <Campo>
+                                            <input
+                                                type="text"
+                                                name="mensaje"
+                                            />
+                                        </Campo>
+                                        <InputSubmit
+                                            type="submit"
+                                            value="Agregar Comentario"
+                                        />
+                                    </form>
+                                </Fragment>
+                            )}
 
                             <h2
                                 css={css`
@@ -103,7 +107,7 @@ const Producto = () => {
                                 href={url}
                             >Visitar URl</Boton>
 
-                            
+
                             <div
                                 css={css`
                                     margin-top: 5rem;
@@ -115,9 +119,11 @@ const Producto = () => {
                                 `}
                                 >{votos} Votos</p>
 
-                                <Boton>
-                                    Votar
-                            </Boton>
+                                {usuario && (
+                                    <Boton>
+                                        Votar
+                                    </Boton>
+                                )}
                             </div>
 
                         </aside>
