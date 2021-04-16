@@ -8,6 +8,7 @@ import Layout from '../../components/layout/Layout';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Campo, InputSubmit } from '../../components/ui/Formulario';
+import Boton from '../../components/ui/Boton';
 
 const ContenedorProducto = styled.div`
     @media (min-width:768px){
@@ -48,7 +49,7 @@ const Producto = () => {
     }, [id]);
 
     if (Object.keys(producto).length === 0) return 'Cargando...';
-    
+
     const { comentarios, creado, descripcion, empresa, nombre, url, urlImagen, votos } = producto;
 
     return (
@@ -89,13 +90,34 @@ const Producto = () => {
                             {comentarios.map(comentario => (
                                 <li>
                                     <p>{comentario.nombre}</p>
-                                    <p>Escrito por: { comentario.usuarioNombre }</p>
+                                    <p>Escrito por: {comentario.usuarioNombre}</p>
                                 </li>
                             ))}
                         </div>
 
                         <aside>
-                            2
+                            <Boton
+                                target="_blank"
+                                bgColor="true"
+                                href={url}
+                            >Visitar URl</Boton>
+
+                            <div
+                                css={css`
+                                    margin-top: 5rem;
+                                `}
+                            >
+                                <p
+                                    css={css`
+                                    text-align:center;
+                                `}
+                                >{votos} Votos</p>
+
+                                <Boton>
+                                    Votar
+                            </Boton>
+                            </div>
+
                         </aside>
                     </ContenedorProducto>
                 </div>
