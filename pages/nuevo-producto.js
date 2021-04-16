@@ -58,7 +58,18 @@ export default function NuevoProducto() {
         return router.push('/');
       }
       const producto = {
-        nombre, empresa, url, urlImagen, descripcion, votos: 0, comentarios: [], creado: Date.now()
+        nombre,
+        empresa,
+        url,
+        urlImagen,
+        descripcion,
+        votos: 0,
+        comentarios: [],
+        creado: Date.now(),
+        creador: {
+          id: usuario.uid,
+          nombre: usuario.displayName
+        }
       }
 
       await firebase.db.collection('productos').add(producto);

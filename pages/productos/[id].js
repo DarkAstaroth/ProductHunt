@@ -50,7 +50,7 @@ const Producto = () => {
 
     if (Object.keys(producto).length === 0) return 'Cargando...';
 
-    const { comentarios, creado, descripcion, empresa, nombre, url, urlImagen, votos } = producto;
+    const { comentarios, creado, descripcion, empresa, nombre, url, urlImagen, votos, creador } = producto;
 
     return (
         <Layout>
@@ -65,6 +65,7 @@ const Producto = () => {
                     <ContenedorProducto>
                         <div>
                             <p>Publicado hace : {formarDistanceToNow(new Date(creado), { locale: es })}</p>
+                            <p>Por: {creador.nombre} de { empresa }</p>
                             <img src={urlImagen} alt="" />
                             <p>{descripcion}</p>
 
@@ -102,6 +103,7 @@ const Producto = () => {
                                 href={url}
                             >Visitar URl</Boton>
 
+                            
                             <div
                                 css={css`
                                     margin-top: 5rem;
