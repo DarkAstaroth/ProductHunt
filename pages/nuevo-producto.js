@@ -115,7 +115,6 @@ export default function NuevoProducto() {
       .child(nombre)
       .getDownloadURL()
       .then(url => {
-        console.log(url);
         setUrlImagen(url);
       });
   };

@@ -17,7 +17,7 @@ export default function Home() {
         firebase.db.collection('productos').orderBy('creado', 'desc').onSnapshot(manejarSnapchot);
 
       } catch (error) {
-
+        console.log(error);
       }
     }
     obtenerProductos();
@@ -32,7 +32,6 @@ export default function Home() {
     });
 
     setProductos(productos);
-    console.log(productos)
   }
 
   return (

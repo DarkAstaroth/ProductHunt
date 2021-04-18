@@ -85,7 +85,7 @@ const Votos = styled.div`
 `;
 
 const DetallesProducto = ({ producto }) => {
-    console.log(producto);
+
     const { id, comentarios, creado, descripcion, empresa, nombre, url, urlImagen, votos } = producto;
     return (
         <Producto>
